@@ -13,10 +13,12 @@ using namespace std;
 
 class Sprite {
 public:
+    int heightSprite = 60;
+    float widthSprite = 340 / 6;
     // Constructor
     Sprite();
     // Single Sprite
-    sf::Sprite pawn, queen, king, bishop, knight, rook;
+    sf::Sprite s1[6], s2[6];
 };
 
 

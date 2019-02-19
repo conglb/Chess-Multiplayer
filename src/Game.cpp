@@ -42,7 +42,9 @@ void Game::start() {
         }
         window->clear();
         board->render();
-        window->draw(sprite->pawn);
+
+        // render the figures depend on the map here
+
         window->display();
     } // end game
 }
