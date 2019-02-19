@@ -15,8 +15,11 @@ class Board {
 public:
     Board(sf::RenderWindow& window);
     void render();
+    float getWidth();
+    float getHeight();
 private:
     sf::RenderWindow* window;
+    float width = 56.0, height = 56.0;
 };
 
 

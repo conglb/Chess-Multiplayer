@@ -15,3 +15,11 @@ void Board::render() {
     window->draw(sprite);
 }
 
+float Board::getHeight() {
+    return height;
+}
+
+float Board::getWidth() {
+    return width;
+}
+
