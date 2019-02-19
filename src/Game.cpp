@@ -4,21 +4,33 @@
 
 #include "Game.h"
 
-static int map[8][8] = {
-        {1,2,3,4,5,3,2,1},
-        {6,6,6,6,6,6,6,6},
-        {0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0},
-        {6,6,6,6,6,6,6,6},
-        {1,2,3,5,4,3,2,1}
-};
-
 Game::Game(sf::RenderWindow& window, Board& board, Sprite& sprite) {
     this->window = &window;
     this->board = &board;
     this->sprite = &sprite;
+    init();
+}
+
+void Game::init() {
+    figuresNum = 32;
+    int count = -1;
+    for (int i=0; i<8; i++) {
+        for (int j=0; j<8; j++) {
+            if (map[i][j] != 0) {
+                count++;
+                if (map[i][j] > 10) {
+                    s[count].setTexture(*sprite->s2[map[i][j] - 11].getTexture());
+                } else {
+                    s[count].setTexture(*sprite->s1[map[i][j] - 1].getTexture());
+                }
+                v[count].y = i * board->getWidth();
+                v[count].x = j * board->getHeight();
+                s[count].setPosition(v[count]);
+                s[count].setPosition(v[count]);
+
+            }
+        }
+    }
 }
 
 void Game::start() {
@@ -44,6 +56,9 @@ void Game::start() {
         board->render();
 
         // render the figures depend on the map here
+        for (int i=0; i<32; i++) {
+            window->draw(s[i]);
+        }
 
         window->display();
     } // end game
