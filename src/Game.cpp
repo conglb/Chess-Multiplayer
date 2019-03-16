@@ -4,9 +4,7 @@
 
 #include "Game.h"
 
-/*
- * Init game with parameters: window, boad, sprite
- */
+
 Game::Game(sf::RenderWindow& window, Board& board, graphic::Sprite& sprite) {
     this->window = &window;
     this->board = &board;
@@ -14,9 +12,7 @@ Game::Game(sf::RenderWindow& window, Board& board, graphic::Sprite& sprite) {
     init();
 }
 
-/*
- * Init a game: Render figures
- */
+
 void Game::init() {
     figuresNum = -1; // index of figure
     for (int i=0; i<8; i++) {
@@ -24,14 +20,14 @@ void Game::init() {
             if (map[i][j] != 0) {
                 figuresNum++;
                 if (map[i][j] > 10) {
-                    s[figuresNum].setTexture(*sprite->s2[map[i][j] - 11].getTexture());
+                    spriteFigure[figuresNum].setTexture(*sprite->s2[map[i][j] - 11].getTexture());
                 } else
-                    s[figuresNum].setTexture(*sprite->s1[map[i][j] - 1].getTexture());
+                    spriteFigure[figuresNum].setTexture(*sprite->s1[map[i][j] - 1].getTexture());
                 // set position
-                v[figuresNum].y = i * board->getWidth();
-                v[figuresNum].x = j * board->getHeight();
-                // implant position to sprite
-                s[figuresNum].setPosition(v[count]);
+                vectorFigure[figuresNum].y = i * board->getWidth();
+                vectorFigure[figuresNum].x = j * board->getHeight();
+                // implant position to spriteFigure
+                spriteFigure[figuresNum].setPosition(vectorFigure[figuresNum]);
 
             }
         }
@@ -39,51 +35,55 @@ void Game::init() {
 }
 
 void Game::deleteFigure(int id) {
-    swap(s[id], s[figuresNum]);
-    swap(v[id], v[figuresNum]);
-    swap(t[id], t[figuresNum]);
+    swap(spriteFigure[id], spriteFigure[figuresNum]);
+    swap(vectorFigure[id], vectorFigure[figuresNum]);
+    swap(typeFigure[id], typeFigure[figuresNum]);
     figuresNum--;
 }
 
-bool Game::checkMove(int id) {
-    /*
-    switch (t[id]% 10) {
+bool Game::checkMove(int fromId, int toId int x, int y, int u, int v) {
+    switch (typeFigure[id] % 10) {
         case 1:
 
+            break;
+        default:
+            break;
     }
-     */
-    return false;
+    return true;
 }
 
 
 bool Game::move(Vector2f& from, Vector2f& to) {
     // find position on board
     int x, y, u ,v;
-    x = from.x / sprite->widthSprite;
+    x = from.x / sprite->widthSprite; // from = (x, y) on board
     y = from.y / sprite->heightSprite;
-    u = to.x / sprite->widthSprite;
+    u = to.x / sprite->widthSprite; // to = (u,v) on board
     v = to.y / sprite->heightSprite;
-    // reset left and right mouse's position
-    from.x = 0;
-    from.y = 0;
-    to.x = 0;
-    to.y = 0;
-    // hand move here
-    int fromId = -1; // id of figure FROM in s
-    int toId = -1;
+
+    // HANDLE MOVE HERE
+    int fromId = -1; // id of figure FROM in spriteFigure
+    int toId = -1; // id of figure TO in spriteFigure
     for (int i = 0; i <= figuresNum; i++) {
-        if (s[i] == from) {
+        if (from.x - x * sprite->widthSprite <= sprite->widthSprite
+        &&  from.y - y * sprite->heightSprite <= sprite->heightSprite) {
             deleteFigure(i);
             fromId = i;
         }
-        if (s[i] == to) {
+        if (to.x - u * sprite->widthSprite <= sprite->widthSprite
+        &&  to.y - v * sprite->heightSprite <= sprite->heightSprite) {
             deleteFigure(i);
             toId = i;
         }
     }
     if (fromId == -1) return false; // FROM not a figure
-    if (!checkMove(fromId)) return false;
+    if (!checkMove(fromId, x, y, u ,v)) return false;
 
+    // reset left and right mouse'spriteFigure position
+    from.x = 0;
+    from.y = 0;
+    to.x = 0;
+    to.y = 0;
     return true;
 
 }
@@ -121,7 +121,7 @@ void Game::start() {
 
         // Render the figures depend on the map here
         for (int i=0; i<32; i++) {
-            window->draw(s[i]);
+            window->draw(spriteFigure[i]);
         }
 
         // Show

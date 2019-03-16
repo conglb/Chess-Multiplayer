@@ -16,10 +16,15 @@ using namespace std;
 
 class Game {
 public:
-    // Constructor
+    /*
+    * Init game with parameters: window, boad, spriteFigure
+    */
     Game(sf::RenderWindow& window,  Board& board,  graphic::Sprite& sprite);
 
     // Init before start game
+    /*
+    * Init a game: Render figures
+    */
     void init();
 
     // Start method
@@ -28,10 +33,14 @@ public:
     // Figure move implement
     bool move(Vector2f& from, Vector2f& to);
 
-    // Check move
-    bool checkMove(int id);
+    /*
+     * Check whether figure id can move from (x,y) to (u,v) or not
+     */
+    bool checkMove(int id, int x, int y, int u, int v);
 
-    // Delete figure
+    /*
+    * Figure is deleted by oponent
+    */
     void deleteFigure(int id);
 
 private:
@@ -46,17 +55,18 @@ private:
      */
     int figuresNum;
     /*
-     * v[i]: position of figure index i
+     * vectorFigure[i]: position of figure index i
      * What happen if figure i die?
      */
-    sf::Vector2f v[32];
+    sf::Vector2f vectorFigure[32];
     /*
-     * s[i]: sprite of figure index i
+     * spriteFigure[i]: spriteFigure of figure index i
      */
-    sf::Sprite s[32];
+    sf::Sprite spriteFigure[32];
     /*
      * type[i]: type of figure index i
      */
+    int typeFigure[32];
 
 
     // Initial state of game
