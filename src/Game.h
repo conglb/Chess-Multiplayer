@@ -26,7 +26,13 @@ public:
     void start();
 
     // Figure move implement
-    void move(Vector2f& from, Vector2f& to);
+    bool move(Vector2f& from, Vector2f& to);
+
+    // Check move
+    bool checkMove(int id);
+
+    // Delete figure
+    void deleteFigure(int id);
 
 private:
     graphic::Sprite* sprite;
@@ -48,6 +54,9 @@ private:
      * s[i]: sprite of figure index i
      */
     sf::Sprite s[32];
+    /*
+     * type[i]: type of figure index i
+     */
 
 
     // Initial state of game

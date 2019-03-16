@@ -4,6 +4,9 @@
 
 #include "Game.h"
 
+/*
+ * Init game with parameters: window, boad, sprite
+ */
 Game::Game(sf::RenderWindow& window, Board& board, graphic::Sprite& sprite) {
     this->window = &window;
     this->board = &board;
@@ -15,27 +18,45 @@ Game::Game(sf::RenderWindow& window, Board& board, graphic::Sprite& sprite) {
  * Init a game: Render figures
  */
 void Game::init() {
-    figuresNum = 32;
-    int count = -1; // index of figure
+    figuresNum = -1; // index of figure
     for (int i=0; i<8; i++) {
         for (int j=0; j<8; j++) {
             if (map[i][j] != 0) {
-                count++;
+                figuresNum++;
                 if (map[i][j] > 10) {
-                    s[count].setTexture(*sprite->s2[map[i][j] - 11].getTexture());
+                    s[figuresNum].setTexture(*sprite->s2[map[i][j] - 11].getTexture());
                 } else
-                    s[count].setTexture(*sprite->s1[map[i][j] - 1].getTexture());
+                    s[figuresNum].setTexture(*sprite->s1[map[i][j] - 1].getTexture());
                 // set position
-                v[count].y = i * board->getWidth();
-                v[count].x = j * board->getHeight();
+                v[figuresNum].y = i * board->getWidth();
+                v[figuresNum].x = j * board->getHeight();
                 // implant position to sprite
-                s[count].setPosition(v[count]);
+                s[figuresNum].setPosition(v[count]);
+
             }
         }
     }
 }
 
-void Game::move(Vector2f& from, Vector2f& to) {
+void Game::deleteFigure(int id) {
+    swap(s[id], s[figuresNum]);
+    swap(v[id], v[figuresNum]);
+    swap(t[id], t[figuresNum]);
+    figuresNum--;
+}
+
+bool Game::checkMove(int id) {
+    /*
+    switch (t[id]% 10) {
+        case 1:
+
+    }
+     */
+    return false;
+}
+
+
+bool Game::move(Vector2f& from, Vector2f& to) {
     // find position on board
     int x, y, u ,v;
     x = from.x / sprite->widthSprite;
@@ -48,8 +69,23 @@ void Game::move(Vector2f& from, Vector2f& to) {
     to.x = 0;
     to.y = 0;
     // hand move here
-    // DOIT
-    //
+    int fromId = -1; // id of figure FROM in s
+    int toId = -1;
+    for (int i = 0; i <= figuresNum; i++) {
+        if (s[i] == from) {
+            deleteFigure(i);
+            fromId = i;
+        }
+        if (s[i] == to) {
+            deleteFigure(i);
+            toId = i;
+        }
+    }
+    if (fromId == -1) return false; // FROM not a figure
+    if (!checkMove(fromId)) return false;
+
+    return true;
+
 }
 
 void Game::start() {
