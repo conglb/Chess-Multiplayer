@@ -11,15 +11,19 @@
 
 using namespace std;
 
-class Sprite {
-public:
-    int heightSprite = 60;
-    float widthSprite = 340 / 6;
-    // Constructor
-    Sprite();
-    // Single Sprite
-    sf::Sprite s1[6], s2[6];
-};
+namespace graphic {
+    class Sprite {
+    public:
+        float heightSprite = 60;
+        float widthSprite = 340 / 6;
+        // Constructor
+        Sprite();
+        // Single Sprite, s1 is for white, s2 is for black
+        sf::Sprite s1[6], s2[6];
+    };
+}
+
+using namespace graphic;
 
 
 #endif //CHESS_SPRITE_H
