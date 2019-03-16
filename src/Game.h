@@ -36,7 +36,7 @@ public:
     /*
      * Check whether figure id can move from (x,y) to (u,v) or not
      */
-    bool checkMove(int id, int x, int y, int u, int v);
+    bool checkMove(int fromId, int toId, int x, int y, int u, int v);
 
     /*
     * Figure is deleted by oponent

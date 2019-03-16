@@ -41,10 +41,26 @@ void Game::deleteFigure(int id) {
     figuresNum--;
 }
 
-bool Game::checkMove(int fromId, int toId int x, int y, int u, int v) {
-    switch (typeFigure[id] % 10) {
+bool Game::checkMove(int fromId, int toId, int x, int y, int u, int v) {
+    // Firstly, check they are same side or oponent
+    if (toId != -1) {
+        if ((typeFigure[fromId] - typeFigure[toId]) < 10) {
+            return false;
+        }
+    }
+    switch (typeFigure[fromId] % 10) {
         case 1:
-
+            if (x != u && y != v) {
+                return false;
+            }
+            break;
+        case 2:
+            if ((abs(x - u) != 1 && abs(x - u) != 2) || (abs(y - v) != 2 && abs(y - v) != 1)) {
+                return false;
+            }
+            if (abs(x - u) == abs(y - v)) {
+                return false;
+            }
             break;
         default:
             break;
@@ -61,29 +77,41 @@ bool Game::move(Vector2f& from, Vector2f& to) {
     u = to.x / sprite->widthSprite; // to = (u,v) on board
     v = to.y / sprite->heightSprite;
 
+    cout << x << " " << y << " " << u << " " << v << endl;
+
     // HANDLE MOVE HERE
     int fromId = -1; // id of figure FROM in spriteFigure
     int toId = -1; // id of figure TO in spriteFigure
     for (int i = 0; i <= figuresNum; i++) {
         if (from.x - x * sprite->widthSprite <= sprite->widthSprite
         &&  from.y - y * sprite->heightSprite <= sprite->heightSprite) {
-            deleteFigure(i);
             fromId = i;
         }
         if (to.x - u * sprite->widthSprite <= sprite->widthSprite
         &&  to.y - v * sprite->heightSprite <= sprite->heightSprite) {
-            deleteFigure(i);
             toId = i;
         }
     }
-    if (fromId == -1) return false; // FROM not a figure
-    if (!checkMove(fromId, x, y, u ,v)) return false;
 
     // reset left and right mouse'spriteFigure position
     from.x = 0;
     from.y = 0;
     to.x = 0;
     to.y = 0;
+
+    // Check it !
+    if (fromId == -1) return false; // FROM not a figure
+    if (!checkMove(fromId, toId, x, y, u ,v)) return false;
+
+    cout << "Check is OK";
+
+    // MOVE
+    if (toId != -1) deleteFigure(toId);
+    vectorFigure[fromId].x = u * sprite->widthSprite;
+    vectorFigure[fromId].y = v * sprite->heightSprite;
+    map[u][v] = map[x][y];
+    map[x][y] = 0;
+
     return true;
 
 }
@@ -113,7 +141,9 @@ void Game::start() {
                 positionLastRightClick.x = Mouse::getPosition(*window).x;
                 positionLastRightClick.y = Mouse::getPosition(*window).y;
                 // Handle move
-                move(positionLastLeftClick, positionLastRightClick);
+                if (positionLastLeftClick.x != 0 || positionLastLeftClick.y != 0) {
+                    move(positionLastLeftClick, positionLastRightClick);
+                }
             }
         }
 
