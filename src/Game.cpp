@@ -41,6 +41,20 @@ void Game::deleteFigure(int id) {
     figuresNum--;
 }
 
+bool Game::checkRoad(int x, int y, int u, int v) {
+    if (x == u) {
+        for (int col = y+1; col < v; col++)
+            if (map[x][col] != 0) return false;
+    }
+    if (y == v) {
+        for (int row = x+1; row < u; row++) {
+            if (map[row][y] != 0) return false;
+        }
+    }
+    // Check diagnose here
+
+}
+
 bool Game::checkMove(int fromId, int toId, int x, int y, int u, int v) {
     // Firstly, check they are same side or oponent
     if (toId != -1) {

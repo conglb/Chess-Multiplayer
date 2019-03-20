@@ -37,6 +37,10 @@ public:
      * Check whether figure id can move from (x,y) to (u,v) or not
      */
     bool checkMove(int fromId, int toId, int x, int y, int u, int v);
+    /*
+     * Check whether road have obstacle or not
+     */
+    bool checkRoad(int x, int y, int u, int v);
 
     /*
     * Figure is deleted by oponent
