@@ -14,7 +14,7 @@ using namespace std;
 namespace graphic {
     class Sprite {
     public:
-        float heightSprite = 60;
+        float heightSprite = 56;
         float widthSprite = 340 / 6;
         // Constructor
         Sprite();

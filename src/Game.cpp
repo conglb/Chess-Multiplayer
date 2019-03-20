@@ -48,8 +48,10 @@ bool Game::checkMove(int fromId, int toId, int x, int y, int u, int v) {
             return false;
         }
     }
+    cout << fromId << " " << toId << endl;
     switch (typeFigure[fromId] % 10) {
         case 1:
+            cout << "Vehicle";
             if (x != u && y != v) {
                 return false;
             }
@@ -83,12 +85,10 @@ bool Game::move(Vector2f& from, Vector2f& to) {
     int fromId = -1; // id of figure FROM in spriteFigure
     int toId = -1; // id of figure TO in spriteFigure
     for (int i = 0; i <= figuresNum; i++) {
-        if (from.x - x * sprite->widthSprite <= sprite->widthSprite
-        &&  from.y - y * sprite->heightSprite <= sprite->heightSprite) {
+        if (spriteFigure[i].getPosition().x == x * board->getWidth() &&  spriteFigure[i].getPosition().y == y * board->getHeight()) {
             fromId = i;
         }
-        if (to.x - u * sprite->widthSprite <= sprite->widthSprite
-        &&  to.y - v * sprite->heightSprite <= sprite->heightSprite) {
+        if (spriteFigure[i].getPosition().x == u * board->getWidth() &&  spriteFigure[i].getPosition().y == v * board->getHeight()) {
             toId = i;
         }
     }
@@ -103,12 +103,13 @@ bool Game::move(Vector2f& from, Vector2f& to) {
     if (fromId == -1) return false; // FROM not a figure
     if (!checkMove(fromId, toId, x, y, u ,v)) return false;
 
-    cout << "Check is OK";
+    cout << "Check is OK" << endl;
 
     // MOVE
-    if (toId != -1) deleteFigure(toId);
-    vectorFigure[fromId].x = u * sprite->widthSprite;
-    vectorFigure[fromId].y = v * sprite->heightSprite;
+    if (toId != -1) deleteFigure(toId); // delete oponent
+    vectorFigure[fromId].x = u * board->getWidth();
+    vectorFigure[fromId].y = v * board->getHeight();
+    spriteFigure[fromId].setPosition(vectorFigure[fromId]);
     map[u][v] = map[x][y];
     map[x][y] = 0;
 
@@ -118,8 +119,8 @@ bool Game::move(Vector2f& from, Vector2f& to) {
 
 void Game::start() {
     Vector2f positionLastLeftClick, positionLastRightClick;
-    cout << positionLastLeftClick.x;
-    cout << positionLastLeftClick.y;
+    //cout << positionLastLeftClick.x;
+    //cout << positionLastLeftClick.y;
     while (window->isOpen()) {
         // Firstly, clear window
         window->clear();
@@ -149,6 +150,7 @@ void Game::start() {
 
         board->render(); // render game board
 
+        // cout << "Render and render" << endl;
         // Render the figures depend on the map here
         for (int i=0; i<32; i++) {
             window->draw(spriteFigure[i]);
